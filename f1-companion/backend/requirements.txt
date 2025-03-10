@@ -1,0 +1,9 @@
+Flask
+Flask-CORS
+Flask-SQLAlchemy
+Flask-SocketIO
+Flask-Caching
+requests
+python-dotenv
+psycopg2-binary
+Flask-Migrate

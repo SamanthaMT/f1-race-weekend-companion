@@ -1,0 +1,272 @@
+[
+    {
+        "country_name": "Australia",
+        "location": "Melbourne",
+        "session_name": "Race",
+        "meeting_official_name": "Formula 1 Louis Vuitton Australian Grand Prix 2025",
+        "date_time_local": "2025-03-16 15:00:00",
+        "date_time_gmt": "2025-03-16 04:00:00",
+        "year": "2025"
+    },
+    {
+        "country_name": "China",
+        "location": "Shanghai",
+        "session_name": "Sprint",
+        "date_time_local": "2025-03-22 11:00:00",
+        "date_time_gmt": "2025-03-22 03:00:00",
+        "meeting_official_name": "Formula 1 Heineken Chinese Grand Prix 2025",
+        "year": "2025"
+    },
+    {
+        "country_name": "China",
+        "location": "Shanghai",
+        "session_name": "Race",
+        "date_time_local": "2025-03-23 15:00:00",
+        "date_time_gmt": "2025-03-23 07:00:00",
+        "meeting_official_name": "Formula 1 Heineken Chinese Grand Prix 2025",
+        "year": "2025"
+    },
+    {
+        "country_name": "Japan",
+        "location": "Suzuka",
+        "session_name": "Race",
+        "date_time_local": "2025-04-06 14:00:00",
+        "date_time_gmt": "2025-04-06 06:00:00",
+        "meeting_official_name": "Formula 1 Lenovo Japanese Grand Prix 2025",
+        "year": "2025"
+    },
+    {
+        "country_name": "Bahrain",
+        "location": "Sakhir",
+        "session_name": "Race",
+        "date_time_local": "2025-04-13 18:00:00",
+        "date_time_gmt": "2025-04-13 16:00:00",
+        "meeting_official_name": "Formula 1 Gulf Air Bahrain Grand Prix 2025",
+        "year": "2025"
+    },
+    {
+        "country_name": "Saudi Arabia",
+        "location": "Jeddah",
+        "session_name": "Race",
+        "date_time_local": "2025-04-20 20:00:00",
+        "date_time_gmt": "2025-04-20 18:00:00",
+        "meeting_official_name": "Formula 1 STC Saudi Arabian Grand Prix 2025",
+        "year": "2025"
+    },
+    {
+        "country_name": "United States",
+        "location": "Miami",
+        "session_name": "Sprint",
+        "date_time_local": "2025-05-03 12:00:00",
+        "date_time_gmt": "2025-05-03 17:00:00",
+        "meeting_official_name": "Formula 1 Crypto.com Miami Grand Prix 2025",
+        "year": "2025"
+    },
+    {
+        "country_name": "United States",
+        "location": "Miami",
+        "session_name": "Race",
+        "date_time_local": "2025-05-04 16:00:00",
+        "date_time_gmt": "2025-05-04 21:00:00",
+        "meeting_official_name": "Formula 1 Crypto.com Miami Grand Prix 2025",
+        "year": "2025"
+    },
+    {
+        "country_name": "Italy",
+        "location": "Imola",
+        "session_name": "Race",
+        "date_time_local": "2025-05-18 15:00:00",
+        "date_time_gmt": "2025-05-18 14:00:00",
+        "meeting_official_name": "Formula 1 AWS Gran Premio Del Made In Italy E Dell'Emilia-Romagna 2025",
+        "year": "2025"
+    },
+    {
+        "country_name": "Monaco",
+        "location": "Monaco",
+        "session_name": "Race",
+        "date_time_local": "2025-05-25 15:00:00",
+        "date_time_gmt": "2025-05-25 14:00:00",
+        "meeting_official_name": "Formula 1 Tag Heuer Grand Prix De Monaco 2025",
+        "year": "2025"
+    },
+    {
+        "country_name": "Spain",
+        "location": "Barcelona",
+        "session_name": "Race",
+        "date_time_local": "2025-06-01 15:00:00",
+        "date_time_gmt": "2025-06-01 14:00:00",
+        "meeting_official_name": "Formula 1 Aramco Gran Premio De Espana 2025",
+        "year": "2025"
+    },
+    {
+        "country_name": "Canada",
+        "location": "Montreal",
+        "session_name": "Race",
+        "date_time_local": "2025-06-15 14:00:00",
+        "date_time_gmt": "2025-06-15 19:00:00",
+        "meeting_official_name": "Formula 1 Pirelli Grand Prix Du Canada 2025",
+        "year": "2025"
+    },
+    {
+        "country_name": "Austria",
+        "location": "Spielberg",
+        "session_name": "Race",
+        "date_time_local": "2025-06-29 15:00:00",
+        "date_time_gmt": "2025-06-29 14:00:00",
+        "meeting_official_name": "Formula 1 MSC Cruises Austrian Grand Prix 2025",
+        "year": "2025"
+    },
+    {
+        "country_name": "Great Britain",
+        "location": "Silverstone",
+        "session_name": "Race",
+        "date_time_local": "2025-07-06 15:00:00",
+        "date_time_gmt": "2025-07-06 15:00:00",
+        "meeting_official_name": "Formula 1 Qatar Airways British Grand Prix 2025",
+        "year": "2025"
+    },
+    {
+        "country_name": "Belgium",
+        "location": "Spa-Francorchamps",
+        "session_name": "Sprint",
+        "date_time_local": "2025-07-26 12:00:00",
+        "date_time_gmt": "2025-07-26 11:00:00",
+        "meeting_official_name": "Formula 1 Moet & Chandon Belgian Grand Prix",
+        "year": "2025"
+    },
+    {
+        "country_name": "Belgium",
+        "location": "Spa-Francorchamps",
+        "session_name": "Race",
+        "date_time_local": "2025-07-27 15:00:00",
+        "date_time_gmt": "2025-07-27 14:00:00",
+        "meeting_official_name": "Formula 1 Moet & Chandon Belgian Grand Prix",
+        "year": "2025"
+    },
+    {
+        "country_name": "Hungary",
+        "location": "Budapest",
+        "session_name": "Race",
+        "date_time_local": "2025-08-03 15:00:00",
+        "date_time_gmt": "2025-08-03 14:00:00",
+        "meeting_official_name": "Formula 1 Lenovo Hungarian Grand Prix 2025",
+        "year": "2025"
+    },
+    {
+        "country_name": "Netherlands",
+        "location": "Zandoort",
+        "session_name": "Race",
+        "date_time_local": "2025-08-31 15:00:00",
+        "date_time_gmt": "2025-08-31 14:00:00",
+        "meeting_official_name": "Formula 1 Heineken Dutch Grand Prix 2025",
+        "year": "2025"
+    },
+    {
+        "country_name": "Italy",
+        "location": "Monza",
+        "session_name": "Race",
+        "date_time_local": "2025-09-07 15:00:00",
+        "date_time_gmt": "2025-09-07 14:00:00",
+        "meeting_official_name": "Formula 1 Pirelli Gran Premio D'Italia 2025",
+        "year": "2025"
+    },
+    {
+        "country_name": "Azerbaijan",
+        "location": "Baku",
+        "session_name": "Race",
+        "date_time_local": "2025-09-21 15:00:00",
+        "date_time_gmt": "2025-09-21 12:00:00",
+        "meeting_official_name": "Formula 1 Qatar Airways Azerbaijan Grand Prix 2025",
+        "year": "2025"
+    },
+    {
+        "country_name": "Singapore",
+        "location": "Marina Bay",
+        "session_name": "Race",
+        "date_time_local": "2025-10-05 20:00:00",
+        "date_time_gmt": "2025-10-05 13:00:00",
+        "meeting_official_name": "Formula 1 Singapore Airlines Singapore Grand prix 2025",
+        "year": "2025"
+    },
+    {
+        "country_name": "United States",
+        "location": "Austin",
+        "date_time_local": "2025-10-18 12:00:00",
+        "date_time_gmt": "2025-10-18 18:00:00",
+        "session_name": "Sprint",
+        "meeting_official_name": "Formula 1 MSC Cruises United States Grand Prix 2025",
+        "year": "2025"
+    },
+    {
+        "country_name": "United States",
+        "location": "Austin",
+        "date_time_local": "2025-10-19 14:00:00",
+        "date_time_gmt": "2025-10-19 20:00:00",
+        "session_name": "Race",
+        "meeting_official_name": "Formula 1 MSC Cruises United States Grand Prix 2025",
+        "year": "2025"
+    },
+    {
+        "country_name": "Mexico",
+        "location": "Mexico City",
+        "session_name": "Race",
+        "date_time_local": "2025-10-26 14:00:00",
+        "date_time_gmt": "2025-10-26 20:00:00",
+        "meeting_official_name": "Formula 1 Gran Premio De La Ciudad De Mexico",
+        "year": "2025"
+    },
+    {
+        "country_name": "Brazil",
+        "location": "Sao Paulo",
+        "session_name": "Sprint",
+        "date_time_local": "2025-11-08 11:00:00",
+        "date_time_gmt": "2025-11-08 14:00:00",
+        "meeting_official_name": "Formula 1 MSC Cruises Grande Premio De Sao Paulo 2025",
+        "year": "2025"
+    },
+    {
+        "country_name": "Brazil",
+        "location": "Sao Paulo",
+        "session_name": "Race",
+        "date_time_local": "2025-11-09 14:00:00",
+        "date_time_gmt": "2025-11-09 17:00:00",
+        "meeting_official_name": "Formula 1 MSC Cruises Grande Premio De Sao Paulo 2025",
+        "year": "2025"
+    },
+    {
+        "country_name": "United States",
+        "location": "Las Vegas",
+        "session_name": "Race",
+        "date_time_local": "2025-11-22 20:00:00",
+        "date_time_gmt": "2025-11-23 04:00:00",
+        "meeting_official_name": "Formula 1 Heineken Las Vegas Grand Prix 2025",
+        "year": "2025"
+    },
+    {
+        "country_name": "Qatar",
+        "location": "Lusail",
+        "session_name": "Sprint",
+        "date_time_local": "2025-11-29 17:00:00",
+        "date_time_gmt": "2025-11-29 14:00:00",
+        "meeting_official_name": "Formula 1 Qatar Airways Qatar Grand Prix 2025",
+        "year": "2025"
+    },
+    {
+        "country_name": "Qatar",
+        "location": "Lusail",
+        "session_name": "Race",
+        "date_time_local": "2025-11-30 19:00:00",
+        "date_time_gmt": "2025-11-30 16:00:00",
+        "meeting_official_name": "Formula 1 Qatar Airways Qatar Grand Prix 2025",
+        "year": "2025"
+    },
+    {
+        "country_name": "United Arab Emirates",
+        "location": "Yas Island",
+        "session_name": "Race",
+        "date_time_local": "2025-12-07 17:00:00",
+        "date_time_gmt": "2025-12-07 13:00:00",
+        "meeting_official_name": "Formula 1 Etihad Airways Abu Dhabi Grand Prix 2025",
+        "year": "2025"
+    }
+]
