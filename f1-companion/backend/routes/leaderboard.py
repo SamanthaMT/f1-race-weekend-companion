@@ -1,62 +1,122 @@
 from flask import Blueprint, jsonify
-import requests
-import time
-import threading
-from collections import deque
-from config import Config
-from routes.battles import recent_intervals
-from extensions import socketio
+from datetime import datetime, timedelta
 
 leaderboard_bp = Blueprint("leaderboard", __name__)
 
-recent_positions = deque(maxlen=2)
-leaderboard = []
+combined_data = []
+leader = None
 
+def merge_driver_position_data():
+    from routes.drivers import get_driver_list
+    driver_list = get_driver_list()
+    from routes.position_data import positions_and_intervals, starting_position_data
 
-def get_positions():
-    #Fetches current drivers positions for the race.
-    if True:
-        response = requests.get(f"{Config.OPENF1_API_URL}/position?session_key=latest")
+    if positions_and_intervals is not None and driver_list is not None:
 
-        if response.status_code == 200:
-            recent_positions.append(response.json())
+        processed_starting_positions = [
+            {
+                "driver_number": driver.get("driver_number"),
+                "starting_position": driver.get("position")
+            }
+            for driver in starting_position_data
+        ]
 
-        time.sleep(3)
+        driver_dictionary = {entry["driver_number"]: entry for entry in driver_list}
+        starting_dictionary = {entry["driver_number"]: entry for entry in processed_starting_positions}
 
-threading.Thread(target=get_positions, daemon=True).start()
+        combined_data.clear()
+        for pos in positions_and_intervals:
+            driver_number = pos["driver_number"]
+            driver_info = driver_dictionary.get(driver_number, {})
+            starting_info = starting_dictionary.get(driver_number, {})
 
-def generate_leaderboard():
-    #Combines position & interval data to generate leaderboard.
-    global leaderboard
-    leaderboard = []
+            merged = {**pos, **driver_info, **starting_info}
+            combined_data.append(merged)
 
-    if not recent_positions or not recent_intervals:
-        return
+        return combined_data
     
-    latest_positions = recent_positions[-1]
-    latest_intervals = recent_intervals[-1]
+def dnf_check(data):
     
+    latest_dt = None
+    
+    if data:   
+        latest_record = max(data, key=lambda rec: datetime.fromisoformat(rec["date"].replace("Z", "+00:00")))
+        latest_dt = datetime.fromisoformat(latest_record["date"].replace("Z", "+00:00"))
+        threshold = latest_dt - timedelta(minutes=3)
+    
+        for driver in data:
+            driver_date = driver.get("date")
+            if driver_date is None:
+                continue
 
-    for driver in latest_positions:
-        driver_number = driver["driver_number"]
-        position = driver["position"]
+            driver_dt = datetime.fromisoformat(driver_date.replace("Z", "00:00")) if driver_date else None
 
+            if driver_dt < threshold:
+                driver["interval"] = "DNF"
+                driver["gap_to_leader"] = "DNF"
 
-        gap_to_next_driver = next((driver_interval["interval"] for driver_interval in latest_intervals if driver_interval["driver_number"] == driver_number), "N/A")
-        gap_to_leader = next((leader_interval["gap_to_leader"] for leader_interval in latest_intervals if leader_interval["driver_number"] == driver_number), "N/A")
+    return data
+    
+def process_story_data(story_data):
 
-        leaderboard.append({
-            "driver": driver_number,
-            "position": position,
-            "interval": gap_to_next_driver,
-            "gap_to_leader": gap_to_leader
-        })
+    if story_data is not None:
 
-    socketio.emit("leaderboard_update", leaderboard)
+        processed_story = [
+            {
+                "driver_number": driver.get("driver_number"),
+                "name_acronym": driver.get("name_acronym"),
+                "position": driver.get("position"),
+                "starting_position": driver.get("starting_position"),
+                "position_change": driver.get("starting_position")-driver.get("position")
+            }
+            for driver in story_data
+        ]
 
-threading.Thread(target=lambda: [time.sleep(5), generate_leaderboard()], daemon=True).start()
+        for driver in processed_story:
+            if driver["position_change"] == 0:
+                driver["position_change"] = "--"
+            elif driver["position_change"] > 0:
+                driver["position_change"] = f"+{driver["position_change"]}"
 
-@leaderboard_bp.route('/leaderboard', methods=['GET'])
+        return processed_story
+    
+def emit_new_leader():
+
+    global merged_data, leader
+
+    temp_leader = None
+    new_leader_alert = []
+
+    #Merge driver data with positions and interval data
+    merged_data = merge_driver_position_data()
+
+    #Check if there is a new race leader
+    if merged_data is not None:
+        try:
+            temp_leader = next((driver for driver in merged_data if driver.get("position")==1), None)
+        except Exception as e:
+            print("Missing data for driver running in first position.")
+    if temp_leader is not None:
+        if leader is None or leader != temp_leader:
+            leader = temp_leader.copy()
+            new_leader_alert.append(leader)
+
+    return new_leader_alert 
+        
+@leaderboard_bp.route("/leaderboard", methods=['GET'])
 def get_leaderboard():
-    #Returns the leaderboard.
-    return jsonify(leaderboard if leaderboard else {"message": "Leaderboard not available yet."})
+    global merged_data
+
+    leaderboard_data = dnf_check(merged_data)
+
+    return jsonify(leaderboard_data if leaderboard_data is not None else {"message": "No leaderboard data recorded yet."})
+
+@leaderboard_bp.route("/race-story", methods=['GET'])
+def get_race_story():
+
+    story_data = merge_driver_position_data()
+
+    race_story_data = process_story_data(story_data)
+
+    return jsonify(race_story_data if race_story_data is not None else {"message": "No race story data recorded yet."})
+

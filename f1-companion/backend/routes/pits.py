@@ -1,60 +1,98 @@
 from flask import Blueprint, jsonify
-from extensions import socketio
 import requests
 from config import Config
 import time
 import threading
 import os
+import json
+from collections import Counter
 
 pits_bp = Blueprint("pits", __name__)
 
-last_pit_stops = {}
+complete_pit_record = None
 
-#Function to fetch and send Pit updates
-def get_pit_updates():
-    global last_pit_stops
+new_pit_stop_alert = []
+pit_record = {}
 
-    while True:
-        response = requests.get(f"{Config.OPENF1_API_URL}/pit?session_key=latest")
-        if response.status_code == 200:
-            pit_stops = response.json()
+def check_new_pits(processed_pits):
+    global new_pit_stop_alert, pit_record
 
-            new_pit_stops = []
-            for stop in pit_stops:
-
-                if "driver_number" not in stop or "lap_number" not in stop:
-                    print(f"Skipping incomplete entry: {stop}")
-                    continue
+    new_pit_stop_alert.clear()
+    for stop in processed_pits:
+        if "driver_number" not in stop or "lap_number" not in stop or "pit_duration" not in stop or "date" not in stop or "pit_stops" not in stop:
+            continue
                 
-                driver = stop["driver_number"]
-                lap = stop["lap_number"]
+        driver = stop["driver_number"]
 
-                if driver not in last_pit_stops:
-                    new_pit_stops.append(stop)
-                    last_pit_stops.update({driver: lap})
-                elif last_pit_stops[driver] < lap:
-                    new_pit_stops.append(stop)
-                    last_pit_stops[driver] = lap
+        if driver not in pit_record:
+            pit_record[driver] = stop
+            new_pit_stop_alert.append(stop)
+        else:
+            if stop["lap_number"] > pit_record[driver]["lap_number"]:
+                pit_record[driver] = stop
+                new_pit_stop_alert.append(stop)
+
+    return list(pit_record.values())
+
+def merge_pit_data(pit_record):
+    from routes.drivers import get_driver_list
+    driver_list = get_driver_list()
+    from routes.stints import stint_record
+    latest_stints = list(stint_record.values())
+
+    pit_data = []
+
+    if driver_list and pit_record and latest_stints is not None:
+        driver_dictionary = {entry["driver_number"]: entry for entry in driver_list}
+        stints_dictionary = {entry["driver_number"]: entry for entry in latest_stints}
+
+        pit_data.clear()
+        for record in pit_record:
+            driver_number = record["driver_number"]
+            driver_info = driver_dictionary.get(driver_number, {})
+            stints_info = stints_dictionary.get(driver_number, {})
+
+            merged = {**record, **driver_info, **stints_info}
+            pit_data.append(merged)
+
+        return pit_data
+    
+def emit_pits():
+    import routes.api_data as api_data
+    global complete_pit_record, new_pit_stop_alert
+
+    if api_data.pits is not None:
+        processed_pits = [
+            {
+                "driver_number": pit.get("driver_number"),
+                "pit_duration": pit.get("pit_duration"),
+                "lap_number": pit.get("lap_number"),
+                "date": pit.get("date")
+            }
+            for pit in api_data.pits
+        ]
+        
+        pit_stop_counter = Counter(pit["driver_number"] for pit in processed_pits)
+
+        for pit in processed_pits:
+            pit["pit_stops"] = pit_stop_counter[pit["driver_number"]]
+
+        #Condense pit data into one entry for each driver
+        pit_record = check_new_pits(processed_pits)
+
+        #Merge pit data with driver and tyre info
+        complete_pit_record = merge_pit_data(pit_record)
+        if new_pit_stop_alert:
+            new_pit_stop_alert = merge_pit_data(new_pit_stop_alert)
+    
+    return new_pit_stop_alert
             
-            if new_pit_stops:
-                socketio.emit("pit_stop_update", new_pit_stops)
-
-            time.sleep(10)
-
-
-threading.Thread(target=get_pit_updates, daemon=True).start()
 
 @pits_bp.route("/pits", methods=['GET'])
 def get_pits():
-    print("Pit page visited! Sending message to Flask console...")
-    socketio.emit('message', "Pit page reached")  # Send message to Flask console
-    return jsonify(last_pit_stops if last_pit_stops else {"message": "No pit stop updates yet."})
 
-@pits_bp.route("/pit_manual")
-def pit_manual():
-    print("Manually emitting new pit update, PID:", os.getpid())
-    socketio.emit("pit_stop_update", {
-        "driver_number": 4,
-        "lap_number": 18,
-    })
-    return jsonify({"status": "Manual pit event emitted"})
+    return jsonify(complete_pit_record if complete_pit_record is not None else {"message": "No pits recorded yet."})
+        
+
+    
+    

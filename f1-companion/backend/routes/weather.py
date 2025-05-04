@@ -4,25 +4,27 @@ from config import Config
 from collections import deque
 import time
 import threading
-
+#from extensions import socketio
+from datetime import datetime
 
 weather_bp = Blueprint("weather", __name__)
 
-recent_weather_data = deque(maxlen=1)
+def get_latest_weather(weather):
 
-def get_weather():
-    #Fetches live weather data for the race track.
-    while True:
-        response = requests.get(f"{Config.OPENF1_API_URL}/weather?session_key=latest")
+    current_weather = max(weather, key=lambda x: datetime.fromisoformat(x["date"].replace("Z", "00:00")))
 
-        if response.status_code == 200:
-            weather_data = response.json()
-            recent_weather_data.append(weather_data)
-
-        time.sleep(180)
-
-threading.Thread(target=get_weather, daemon=True).start()
+    return current_weather
 
 @weather_bp.route("/weather", methods=['GET'])
 def get_weather_data():
-    return jsonify(recent_weather_data[-1] if recent_weather_data else {"message": "No weather data available yet."})
+    import routes.api_data as api_data
+
+    weather_data = None
+
+    if api_data.weather is not None:
+        try:
+            weather_data = max(api_data.weather, key=lambda x: datetime.fromisoformat(x["date"].replace("Z", "00:00")))
+        except Exception as e:
+            print("Date missing in collected weather data.")
+    
+    return jsonify(weather_data if weather_data is not None else {"message": "No weather data available yet."})
