@@ -28,28 +28,41 @@ function WeatherComponent() {
     }, []);
 
     return (
-        <div>
-            <h2>Weather Data</h2>
+        <section>
+        <div className="flex flex-col">
+            <h1 className="font-bold text-xl text-center">
+                WEATHER
+            </h1>
+            
             {weather ? (
-                <div>
-                    <p>
-                        Air Temperature:{" "}{weather.air_temperature != null ? `${weather.air_temperature}°C` : "N/A"}
-                    </p>
-                    <p>
-                        Humidity:{" "}{weather.humidity != null ? `${weather.humidity}%` : "N/A"}
-                    </p>
-                    <p>Rainfall: {weather.rainfall ?? "N/A"}</p>
-                    <p>
-                        Track Temperature:{" "}{weather.track_temperature != null ? `${weather.track_temperature}°C` : "N/A"}
-                    </p>
-                    <p>
-                        Wind Speed:{" "}{weather.wind_speed != null ? `${weather.wind_speed}m/s` : "N/A"}
-                    </p>
+                <div className="mt-20 sm:mt-10 flex flex-col items-center gap-8">
+                    <div className="w-full max-w-xs sm:max-w-sm aspect-[18/11]">
+                        <img src={weather.rainfall == 1 ? "/images/rain.jpg" : "/images/sun.jpg"}
+                        alt="Current weather"
+                        className="w-full h-full object-cover rounded-2xl shadow-md border-8 border-red-600 aspect-video "
+                        />
+                    </div>
+                    <div className="space-y-2 mt-2">
+                        <p>
+                            <strong className="font-bold">AIR TEMPERATURE :</strong>{" "}{weather.air_temperature != null ? `${weather.air_temperature}°C` : "N/A"}
+                        </p>
+                        <p>
+                            <strong className="font-bold">HUMIDITY :</strong>{" "}{weather.humidity != null ? `${weather.humidity}%` : "N/A"}
+                        </p>
+                        <p><strong className="font-bold">RAINFALL : </strong>{weather.rainfall ?? "N/A"}</p>
+                        <p>
+                            <strong className="font-bold">TRACK TEMPERATURE :</strong>{" "}{weather.track_temperature != null ? `${weather.track_temperature}°C` : "N/A"}
+                        </p>
+                        <p>
+                            <strong className="font-bold">WIND SPEED :</strong>{" "}{weather.wind_speed != null ? `${weather.wind_speed}m/s` : "N/A"}
+                        </p>
+                    </div>
                 </div>
             ) : (
-                <p>Loading weather data...</p>
+                <p className="mt-7 text-center font-bold">Loading weather data...</p>
             )}
         </div>
+        </section>
     );
 }
 

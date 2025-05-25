@@ -63,6 +63,7 @@ def format_lap(lap):
     driver_list = get_driver_list()
 
     if driver_list is not None and lap is not None:
+
         #Convert lap time from minutes into seconds, minutes
         time_to_convert = lap["lap_duration"]
         minutes = int(time_to_convert // 60)
@@ -93,7 +94,8 @@ def emit_fastest_lap():
                 "driver_number": lap.get("driver_number"),
                 "lap_duration": lap.get("lap_duration"),
                 "lap_number": lap.get("lap_number"),
-                "top_speed": lap.get("st_speed")
+                "top_speed": lap.get("st_speed"),
+                "date": lap.get("date_start")
             }
             for lap in api_data.laps
         ]

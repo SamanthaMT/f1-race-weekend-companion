@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
+import { toast } from "react-toastify";
 
 
 const useWebSocket = () => {
@@ -13,9 +14,9 @@ const useWebSocket = () => {
 
 
     useEffect(() => {
-        //const threshold = new Date(now.getTime() - 3 * 60 * 1000);
+        const threshold = new Date(Date.now() - 2 * 60 * 1000);
         //For testing - using exact datetime
-        const threshold = new Date("2025-04-20T18:01:00Z")
+        //const threshold = new Date("2025-05-24T14:30:00Z")
 
         const socketInstance = io("http://127.0.0.1:5000", {
             transports: ["websocket", "polling"]
@@ -42,12 +43,8 @@ const useWebSocket = () => {
                 const time = new Date(lap.date);
                 return time > threshold;
             }).forEach(lap => {
-                alert(`New Fastest Lap: ${lap.driver_number} - ${lap.name_acronym}`);
+                toast(`New Fastest Lap: ${lap.driver_number} - ${lap.name_acronym}`);
             });
-            /*
-            data.forEach(lap => {
-                alert(`New Fastest Lap: ${lap.driver_number} - ${lap.name_acronym}`);
-            });*/
         });
 
         socketInstance.on("pit_stop_update", (data) => {
@@ -56,12 +53,14 @@ const useWebSocket = () => {
                 const updated = [...prev, ...data];
                 return updated.length > 3 ? updated.slice(-3) : updated;
             });
-
+            
             data.filter(pit => {
                 const time = new Date(pit.date);
+                console.log(`threshold: ${threshold}`)
+                console.log(`time: ${time}`)
                 return time > threshold;
             }).forEach(pit => {
-                alert(`Pit Stop: Driver ${pit.driver_number} - ${pit.name_acronym} (lap ${pit.lap_number})`);
+                toast(`Pit Stop: Driver ${pit.driver_number} - ${pit.name_acronym} (lap ${pit.lap_number})`);
             });
         });
 
@@ -71,12 +70,12 @@ const useWebSocket = () => {
                 const updated = [...prev, ...data];
                 return updated.length > 3 ? updated.slice(-3) : updated;
             });
-
+            
             data.filter(msg => {
                 const time = new Date(msg.date);
                 return time > threshold;
             }).forEach(msg => {
-                alert(`Race Control: ${msg.message} (lap ${msg.lap_number})`);
+                toast(`Race Control: ${msg.message} (lap ${msg.lap_number})`);
             });
         });
 
@@ -88,7 +87,7 @@ const useWebSocket = () => {
             });
 
             data.forEach(battle => {
-                alert(`New battle between drivers ${battle.driver_number} and ${battle.driver_ahead_number}`);
+                toast(`New battle between drivers ${battle.driver_number} and ${battle.driver_ahead_number}`);
             });
         });
 
@@ -103,12 +102,8 @@ const useWebSocket = () => {
                 const time = new Date(leader.date);
                 return time > threshold;
             }).forEach(leader => {
-                alert(`New Leader Alert: ${leader.driver_number} - ${leader.name_acronym}`);
+                toast(`New Leader Alert: ${leader.driver_number} - ${leader.name_acronym}`);
             });
-
-            /*data.forEach(leader => {
-                alert(`New Leader Alert: ${leader.driver_number} - ${leader.name_acronym}`);
-            });*/
         });
 
         return () => {

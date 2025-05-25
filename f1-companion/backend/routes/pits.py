@@ -34,6 +34,29 @@ def check_new_pits(processed_pits):
 
     return list(pit_record.values())
 
+def add_no_pits(missing_record):
+    from routes.position_data import starting_position_data
+
+    if starting_position_data is not None:
+        drivers = { entry["driver_number"] for entry in starting_position_data }
+        pitted = { entry["driver_number"] for entry in missing_record }
+
+        missing = drivers - pitted
+
+        if missing is not None:
+            for entry in missing:
+                missing_record.append(
+                    {
+                    "driver_number": entry,
+                    "pit_duration": None,
+                    "lap_number": None,
+                    "date": None,
+                    "pit_stops": 0
+                    }
+                )
+
+    return missing_record
+
 def merge_pit_data(pit_record):
     from routes.drivers import get_driver_list
     driver_list = get_driver_list()
@@ -78,7 +101,10 @@ def emit_pits():
             pit["pit_stops"] = pit_stop_counter[pit["driver_number"]]
 
         #Condense pit data into one entry for each driver
-        pit_record = check_new_pits(processed_pits)
+        missing_pit_record = check_new_pits(processed_pits)
+
+        #Add data for drivers with 0 pits for full compound list.
+        pit_record = add_no_pits(missing_pit_record)
 
         #Merge pit data with driver and tyre info
         complete_pit_record = merge_pit_data(pit_record)

@@ -1,6 +1,5 @@
-
-
 import React, { useEffect, useState } from 'react';
+import useWebSocket from "../hooks/useWebSocket";
 
 function RCHistoryComponent() {
     const [rcHistory, setRCHistory] = useState(null);
@@ -13,8 +12,10 @@ function RCHistoryComponent() {
                     throw new Error(`Race Control HTTP error: ${res.status}`);
                 }
                 const data = await res.json();
+
+                const sortedData = data.reverse();
                 
-                setRCHistory(data);
+                setRCHistory(sortedData);
             } catch (error) {
                 console.error(`Error fetching race control data: ${error}`);
             }
@@ -27,35 +28,40 @@ function RCHistoryComponent() {
 
     }, []);
 
-    return (
-        <div id="rcHistory">
-            {rcHistory && rcHistory.length > 0 ? (
-                <div>
-                    
-                    <table border="1" cellpadding="5" cellspacing="0">
-                        <thead>
-                            <tr>
-                                <td>Lap Number</td>
-                                <td>Flag</td>
-                                <td>Message</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {rcHistory.map((entry, index) => (
-                                <tr key={index}>
-                                    <td>{entry.lap_number}</td>
-                                    <td>{entry.flag}</td>
-                                    <td>{entry.message}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+    const {
+            raceControlUpdate
+        } = useWebSocket();
 
+    return (
+        <section>
+        <div id="rcHistory">
+            <h1 className="font-bold text-xl text-center">
+                RACE CONTROL MESSAGES
+                <br></br>
+                <br></br>
+                </h1>
+            {rcHistory && rcHistory.length > 0 ? (
+                <div className="flex-1 grid gap-3 overflow-y-auto">
+                    {rcHistory.map((msg, index) => (
+                        <div
+                            key={index}
+                            className="flex items-center justify-center bg-stone-700 text-center text-white rounded-lg p-2 shadow-md border-red-600 border-2 h-32 sm:h-24">
+                            <p className="break-words leading-snug">{msg.message}</p>
+                        </div>
+                    ))}
+                    
                 </div>
             ) : (
-                <p>Loading race control history...</p>
+                <p className="text-center font-bold">Loading race control history...</p>
             )}
         </div>
+        <div className="hidden">
+            <strong>Race Control Alerts:</strong>
+            <ul>
+                {raceControlUpdate.map((u, i) => <li key={i}>{JSON.stringify(u)}</li>)}
+            </ul>
+        </div>
+        </section>
     );
 }
 

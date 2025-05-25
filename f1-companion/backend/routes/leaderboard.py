@@ -50,8 +50,9 @@ def dnf_check(data):
                 continue
 
             driver_dt = datetime.fromisoformat(driver_date.replace("Z", "00:00")) if driver_date else None
+            driver_interval = driver.get("interval")
 
-            if driver_dt < threshold:
+            if driver_dt < threshold or isinstance(driver_interval, str):
                 driver["interval"] = "DNF"
                 driver["gap_to_leader"] = "DNF"
 
@@ -84,8 +85,8 @@ def emit_new_leader():
 
     global merged_data, leader
 
-    temp_leader = None
     new_leader_alert = []
+    temp_leader = None
 
     #Merge driver data with positions and interval data
     merged_data = merge_driver_position_data()
@@ -97,8 +98,9 @@ def emit_new_leader():
         except Exception as e:
             print("Missing data for driver running in first position.")
     if temp_leader is not None:
-        if leader is None or leader != temp_leader:
+        if leader is None or leader["driver_number"] != temp_leader["driver_number"]:
             leader = temp_leader.copy()
+            new_leader_alert.clear()
             new_leader_alert.append(leader)
 
     return new_leader_alert 
